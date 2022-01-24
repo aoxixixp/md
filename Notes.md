@@ -408,7 +408,6 @@ int main()
 
 - **在整数后面紧跟 l 或者 L（不区分大小写）表明该数字是 long 类型；**
 - **在小数后面紧跟 f 或者 F（不区分大小写）表明该数字是 float 类型。**
-- 
 
 请看下面的代码：
 
@@ -426,23 +425,100 @@ float z = 0.02;
 
 
 
+------
 
 
 
+# 七、`char`类型的细节
+
+#### 英文半角与全角的区别：
+
+英文字母不管大写还是小写都有全角和半角的。
+
+**半角：**半角的英文字母只占用一个字节的位置。**（与`ASCII`编码表相对应）**
+
+**全角：**全角的英文字母占用两个字节的位置。**（不在`ASCII`编码表中）**
+
+### `char`类型的长度为1，只能容纳ASCII码表中的字符（半角的英文字母）
 
 
 
+### `char`类型的输出：
+
+​		**专门的字符输出函数`pitchar`;（`putchar`函数每次只能输出一个字符，输出多个字符需要调用多次）**
+
+​		**通用的格式化输出函数`printf`,`char`对应的格式控制符`%c`;**
 
 
 
+### 输出中文字符：
+
+​	即宽字符：**新的数据类型`wchar_t`需要增加头文件`#include<wchar.h>`（可以定义`wchar_t`类型的数据）以及`#include<locale.h>`来设置本地化（用到函数`setlocale(LC_ALL, "chs");`）**
+
+> **定义宽字符数据：（定义宽字符时，要加前缀`L`）**
+
+```c
+#include <stdio.h>
+#include <wchar.h>
+#include <locale.h>
+#include <stdlib.h>
+int main()
+{
+	/* code */
+    setlocale(LC_ALL, "chs");    //使用专门的 putwchar 输出宽字符   
+	wchar_t a = L'A';  //英文字符(基本拉丁字符)
+	wchar_t b = L'9';  //英文数字(阿拉伯数字)
+	wchar_t c = L'中';  //中文汉字
+	wchar_t d = L'国';  //中文汉字
+	wchar_t e = L'。';  //中文标点
+	wchar_t f = L'ヅ';  //日文片假名
+	wchar_t g = L'♥';  //特殊符号
+	wchar_t h = L'༄';  //藏文
+    
+    return 0;
+}
+```
 
 
 
+> **输出宽字符的函数：（输出宽字符时，用到`wprintf`函数要在`" "`前加`L`）**
+>
+> ​		**`wprinf`函数可以输出宽字符的数据（格式控制符为`%lc`）**
+
+```c
+int main()
+{
+	putwchar(L'\n');
+	wprintf(L"a = %lc\nb = %lc\nc = %lc\nd = %lc\ne = %lc\nf = %lc\ng = %lc\nh = %lc\n", a, b, c, d, e, f, g, h);
+	return 0;
+}
+
+```
 
 
 
+> **输出宽字符串：**
+>
+> ​		**定义宽字符串和定义字符串一样（字符数组的字符指针）**
+>
+> ​		**`wprinf`函数可以输出宽字符串的数据（格式控制符为`%ls`）**
 
+```c
+#include <stdio.h>
+#include <wchar.h>
+#include <locale.h>
+#include <stdlib.h>
+int main()
+{    
+	wchar_t web_url[] = L"http://c.biancheng.net";    
+	wchar_t *web_name = L"C语言中文网";       //将本地环境设置为简体中文 (可以输出，但是有警告)   
+	setlocale(LC_ALL, "chs");    //使用通用的 wprintf 输出宽字符    
 
+	wprintf(L"web_url: %ls \nweb_name: %ls\n", web_url, web_name);   
+
+	return 0;
+}
+```
 
 
 
